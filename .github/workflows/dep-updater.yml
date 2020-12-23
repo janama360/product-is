@@ -28,7 +28,7 @@ jobs:
         GIT_TOKEN: ${{secrets.GIT_TOKEN}}
       run: |
         wget https://raw.githubusercontent.com/janama360/product-is/master/.github/scripts/dependency-updater.sh
-        bash builder.sh
+        bash dependency-updater.sh
     - name: Archive dep update diff file
       if: always()
       uses: actions/upload-artifact@v2

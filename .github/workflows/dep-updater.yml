@@ -26,6 +26,7 @@ jobs:
       id: builder_step
       env:
         GIT_TOKEN: ${{secrets.GIT_TOKEN}}
+        BUILD_NUMBER: ${{github.run_id}}
       run: |
         wget https://raw.githubusercontent.com/janama360/product-is/master/.github/scripts/dependency-updater.sh
         bash dependency-updater.sh

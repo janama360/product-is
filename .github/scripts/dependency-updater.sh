@@ -74,8 +74,9 @@ echo "Local dependency update is completed and successfully prepared for build"
 echo "=========================================================="
 
 
-mvn clean install -Dmaven.test.skip=true --batch-mode | tee mvn-build.log
-#mvn clean install -Dmaven.test.failure.ignore=false
+# mvn clean install -Dmaven.test.skip=true --batch-mode | tee mvn-build.log
+mvn clean install -Dmaven.test.failure.ignore=false --batch-mode | tee mvn-build.log
+# mvn clean install -Dmaven.test.failure.ignore=false
 
 
 REPOSITORY=product-is

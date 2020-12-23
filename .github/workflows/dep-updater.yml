@@ -1,0 +1,55 @@
+name: dep-updater
+
+on:
+  workflow_dispatch:
+
+jobs:   
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Build init
+      run: |
+        wget -c https://raw.githubusercontent.com/wso2/product-is/master/pom.xml -O cache-key-file.xml
+    - name: Cache maven packages
+      id: cache-maven-m2
+      uses: actions/cache@v2
+      with:
+       path: |
+         ~/.m2
+         !~/.m2/repository/org/wso2/is/wso2is/
+       key: ${{ runner.os }}-pr-builder-${{ hashFiles('cache-key-file.xml') }}
+       restore-keys: |
+         ${{ runner.os }}-pr-builder-
+         ${{ runner.os }}-pr-builder
+    - name: Run Dep updater
+      id: builder_step
+      env:
+        GIT_TOKEN: ${{secrets.GIT_TOKEN}}
+      run: |
+        wget https://raw.githubusercontent.com/janama360/product-is/master/.github/scripts/dependency-updater.sh
+        bash builder.sh
+    - name: Archive dep update diff file
+      if: always()
+      uses: actions/upload-artifact@v2
+      with:
+        name: dep-update-diff
+        path: |
+          product-is/dependency_updates.diff
+        if-no-files-found: warn
+    - name: Archive product-is mvn build log
+      if: always()
+      uses: actions/upload-artifact@v2
+      with:
+        name: product-is-mvn-build-log
+        path: |
+          product-is/mvn-build.log
+        if-no-files-found: warn
+    - name: Archive product-is surefire reports
+      if: always()
+      uses: actions/upload-artifact@v2
+      with:
+        name: product-is-surefire-report
+        path: |
+          product-is/**/surefire-reports
+        if-no-files-found: warn
